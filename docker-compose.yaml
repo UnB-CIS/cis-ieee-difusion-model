@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  jupyter_lab:
+    container_name: jupyter_lab
+    build: .
+    ports:
+      - "8888:8888"
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    user: "${UID}:${GID}"
+    volumes:
+      - .:/home/caefleury/Documents/ieee-cis/cis-difusion-model/src
