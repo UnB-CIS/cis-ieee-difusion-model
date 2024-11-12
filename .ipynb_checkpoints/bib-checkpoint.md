@@ -1,5 +1,6 @@
 # Bibliografia 
 
+
 1. [Image Super-Resolution Using Deep Convolutional Networks](https://ieeexplore.ieee.org/document/7115171)
 - Definição das constantes
 
