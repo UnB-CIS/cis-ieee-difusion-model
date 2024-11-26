@@ -9,9 +9,6 @@ services:
     environment:
       - JUPYTER_ENABLE_LAB=yes
       - JUPYTER_TOKEN=""
-    env_file:
-      - .env
     volumes:
       - .:/app
-      
-
+    working_dir: /app
