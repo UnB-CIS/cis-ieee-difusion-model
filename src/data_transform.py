@@ -8,8 +8,9 @@ class DataTransformer:
         self.img_size = img_size
         self.resize_method = resize_method
 
-    def resize_image(self, image: tf.Tensor) -> tf.Tensor:
-        return tf.image.resize(image, [self.img_size, self.img_size], method=self.resize_method)
+    def resize_image(self, image: tf.Tensor, new_size: tf.Tensor) -> tf.Tensor:
+        
+        return tf.image.resize(image, [self.img_size, self.img_size], method=self.resize_method, preserve_aspect_ratio=True)
 
     def load_and_preprocess_image(self, image: tf.Tensor, label: tf.Tensor) -> Tuple[tf.Tensor, tf.Tensor]:
         image = self.resize_image(image)
