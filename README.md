@@ -30,7 +30,7 @@ docker-compose up
 
 ### Dev
 
-Branch de ambiente de desenvolvimento da equipe. 
+Branch de ambiente de desenvolvimento da equipe.
 
 Toda nova funcionalidade ou correção deve primeiro ser implementada na branch `dev`.
 
@@ -81,4 +81,3 @@ Após o nome, adicione um sufixo numérico, explicitando qual a issue do projeto
 Focando-se na boa prática de integração contínua, faz-se necessário particionar pendências e novas funcionalidades
 o máximo possível, enquanto houver sentido, afim de se criar issues com menores responsabilidades, promovendo
 branchs menores, PRs menores, merges mais frequentes e um código-fonte com atualizações constantes.
-
