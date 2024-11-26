@@ -2,12 +2,16 @@ version: "3"
 
 services:
   jupyter_lab:
-    container_name: jupyter_lab
+    container_name: difusion_model_jupyter_lab
     build: .
     ports:
       - "8888:8888"
     environment:
       - JUPYTER_ENABLE_LAB=yes
       - JUPYTER_TOKEN=""
+    env_file:
+      - .env
     volumes:
-      - .:/home/caefleury/Documents/ieee-cis/cis-difusion-model/src
+      - .:/app
+      
+
