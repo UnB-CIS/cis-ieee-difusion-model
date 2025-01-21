@@ -1,0 +1,70 @@
+[tool.poetry]
+name = "cis-ieee-difusion-model"
+version = "0.1.0"
+description = "Implementação do modelo SR3 para super resolução de imagens usando difusão"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+tensorflow = "^2.15.0"
+numpy = "^1.24.0"
+opencv-python = "^4.8.0"
+matplotlib = "^3.8.0"
+tqdm = "^4.66.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+ruff = "^0.1.9"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+indent-width = 4
+
+# Exclui diretórios específicos
+exclude = [
+    ".git",
+    ".ruff_cache",
+    "__pycache__",
+    "build",
+    "dist",
+]
+
+[tool.ruff.lint]
+# Habilita regras adicionais
+extend-select = [
+    "D",   # pydocstyle
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "RUF", # ruff dev's own rules
+    "SIM", # pyflakes simplicity
+    "C90", # more complexity rules
+]
+
+# Ignora algumas regras específicas
+ignore = [
+    "E501",  # line too long - deixamos isso para o formatter
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+split-on-trailing-commas = false
+
+# Configurações para o formatter
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
