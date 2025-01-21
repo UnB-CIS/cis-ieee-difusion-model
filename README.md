@@ -1,83 +1,245 @@
-# CIS - IEEE Difusion Model
+# SR3: Super Resolution via Diffusion Model
 
-## Tecnologias Utilizadas
+Este projeto implementa um modelo de super resolução de imagens baseado em difusão, inspirado no artigo [Image Super-Resolution via Iterative Refinement](https://arxiv.org/abs/2104.07636).
 
-- [Docker](hhttps://www.docker.com/)
-- [Tensforflow](https://www.tensorflow.org/)
+## Estrutura do Projeto
 
-## Pré-Requisitos
-
-- Ter o docker instalado
-- Ajustar direção do volume no arquivo `docker-compose.yml` para o diretório onde se encontra o modelo de difusão
-
-## Estrutura do projeto (draft)
-
-```bash
-├── src
-│   └── main-cpu.py # Script principal para execução do modelo de difusão (para o tensor flow rodar em CPU)
-├── docs
-│   ├── bib.md # Referências bibliográficas
-│   └── main-cpu.md  # Documentação do script main-cpu.py
+```
+src/
+├── data/
+│   └── dataset.py      # Gerenciamento e pré-processamento de dados
+├── models/
+│   ├── diffusion.py    # Processo de difusão
+│   └── unet.py         # Arquitetura U-NET
+├── utils/
+│   └── visualization.py # Funções de visualização
+└── train.py            # Script principal de treinamento
 ```
 
-## Como rodar o projeto
+## Requisitos
 
+- Python 3.8 ou superior
+- Poetry (gerenciador de dependências)
+- GPU com suporte a CUDA (recomendado)
+
+## Instalação
+
+Você pode escolher entre duas opções de instalação:
+
+### Opção 1: Usando Poetry (Recomendado)
+
+1. Instale o Poetry (se ainda não tiver):
 ```bash
-docker-compose up
+curl -sSL https://install.python-poetry.org | python3 -
 ```
 
-## Branchs principais
+2. Clone o repositório:
+```bash
+git clone https://github.com/seu-usuario/cis-ieee-difusion-model.git
+cd cis-ieee-difusion-model
+```
 
-### Dev
+3. Instale as dependências:
+```bash
+poetry install
+```
 
-Branch de ambiente de desenvolvimento da equipe.
+4. Ative o ambiente virtual:
+```bash
+poetry shell
+```
 
-Toda nova funcionalidade ou correção deve primeiro ser implementada na branch `dev`.
+### Opção 2: Usando pip
 
-### Main
+1. Clone o repositório:
+```bash
+git clone https://github.com/seu-usuario/cis-ieee-difusion-model.git
+cd cis-ieee-difusion-model
+```
 
-Branch principal do repositório e representa o ambiente de produção do projeto.
+2. Crie e ative um ambiente virtual (opcional, mas recomendado):
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# ou
+.\venv\Scripts\activate  # Windows
+```
 
-## Boas Práticas de GitHub
+3. Instale as dependências:
+```bash
+pip install -r requirements.txt
+```
 
-### Novas branchs
+## Uso
 
-Procure criar branchs a partir da versão dev, caso vá desenvolver alguma alteração visual ou funcional do software.
+### Preparação dos Dados
 
-### Nomenclatura de novas branchs
+1. Estruture seus dados no diretório `data/`:
+```
+data/
+└── imagens/
+    ├── pessoa1/
+    │   ├── foto1.jpg
+    │   └── foto2.jpg
+    └── pessoa2/
+        ├── foto1.jpg
+        └── foto2.jpg
+```
 
-Ao criar a nova branch, procure trazer significado a ela desde a sua nomeação, e aqui seguem algumas boas práticas:
+2. Requisitos das imagens:
+   - Formato: JPG ou PNG
+   - Resolução mínima: 128x128 pixels
+   - Recomendado: imagens faciais bem iluminadas e centralizadas
 
-#### Prefixo
+### Treinamento do Modelo
 
-Coloque um prefixo na branch, a fim de esclarecer sua intenção. Alguns exemplos abaixo:
+1. Treinamento básico:
+```bash
+python src/train.py
+```
 
-- `feat/`: implementação de uma nova funcionalidade do software;
-- `fix/`: implementação de uma correção no software;
-- `docs/`: documentação de parte ou trecho do software;
-- `refactor/`: refatoração de parte ou trecho do software.
+2. Com parâmetros personalizados:
+```bash
+python src/train.py --data_dir data/imagens --epochs 100 --batch_size 16 --save_dir resultados
+```
 
-#### Nome
+3. Parâmetros disponíveis:
+   - `--data_dir`: Diretório com as imagens de treino (default: data/)
+   - `--epochs`: Número de épocas de treinamento (default: 100)
+   - `--batch_size`: Tamanho do batch (default: 16)
+   - `--learning_rate`: Taxa de aprendizado (default: 0.0008)
+   - `--max_images`: Limite de imagens para treino (opcional)
+   - `--save_dir`: Diretório para salvar resultados (default: resultados/)
 
-Após o prefixo, coloque um nome declarativo ou explicativo do objetivo da branch, ou seja, um nome que diga
-o que será implementado na branch. Procure escrever na convenção "kebab-case".
+### Visualização dos Resultados
 
-#### Sufixo
+1. Durante o treinamento:
+   - Curvas de perda são salvas em `resultados/curva_perda.png`
+   - Checkpoints do modelo em `resultados/checkpoints/`
 
-Após o nome, adicione um sufixo numérico, explicitando qual a issue do projeto a que se refere a nova branch.
+2. Após o treinamento:
+   - Modelo final salvo em `resultados/modelo_final.h5`
+   - Exemplos de super resolução em `resultados/exemplos/`
 
-#### Exemplo
+### Inferência
 
-- `feat/data-fetching-23`
-- `fix/tensorflow-implementation-12`
-- `refactor/extract-component-5`
+1. Para super resolução de uma única imagem:
+```bash
+python src/inference.py --input imagem.jpg --output resultado.png
+```
 
-### Novas issues no Project
+2. Para processar um diretório:
+```bash
+python src/inference.py --input_dir pasta_imagens/ --output_dir resultados/
+```
 
-É necessário tomar algumas atenções quanto às issues do GitHub.
+## Desenvolvimento
 
-#### Integração Contínua
+O projeto usa várias ferramentas de desenvolvimento:
 
-Focando-se na boa prática de integração contínua, faz-se necessário particionar pendências e novas funcionalidades
-o máximo possível, enquanto houver sentido, afim de se criar issues com menores responsabilidades, promovendo
-branchs menores, PRs menores, merges mais frequentes e um código-fonte com atualizações constantes.
+- **Black**: Formatação de código
+  ```bash
+  poetry run black .
+  ```
+
+- **isort**: Ordenação de imports
+  ```bash
+  poetry run isort .
+  ```
+
+- **mypy**: Checagem de tipos
+  ```bash
+  poetry run mypy src/
+  ```
+
+- **pylint**: Análise estática
+  ```bash
+  poetry run pylint src/
+  ```
+
+Para executar todas as verificações de uma vez:
+```bash
+poetry run pre-commit run --all-files
+```
+
+## Testes
+
+1. Executar todos os testes:
+```bash
+poetry run pytest
+```
+
+2. Apenas testes unitários:
+```bash
+poetry run pytest -m "unit"
+```
+
+3. Apenas testes de integração:
+```bash
+poetry run pytest -m "integration"
+```
+
+4. Com cobertura de código:
+```bash
+poetry run pytest --cov=src tests/
+```
+
+## Solução de Problemas
+
+### Erros Comuns
+
+1. **Memória GPU insuficiente**:
+   - Reduza o batch_size
+   - Diminua a resolução das imagens
+   - Use mixed precision training
+
+2. **Imagens não carregam**:
+   - Verifique o formato das imagens
+   - Confirme as permissões dos arquivos
+   - Valide a estrutura do diretório
+
+3. **Treinamento instável**:
+   - Ajuste a taxa de aprendizado
+   - Aumente o número de épocas
+   - Verifique a qualidade dos dados
+
+### Otimização de Performance
+
+1. **GPU**:
+   - Use CUDA para aceleração
+   - Monitore o uso de memória
+   - Ajuste os parâmetros de batch
+
+2. **Dados**:
+   - Use TFRecords para I/O eficiente
+   - Implemente data augmentation
+   - Cache os dados em memória
+
+3. **Modelo**:
+   - Ative a compilação XLA
+   - Use mixed precision quando possível
+   - Otimize o pipeline de dados
+
+## Contribuindo
+
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## Licença
+
+Este projeto está licenciado sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+## Citação
+
+Se você usar este código em sua pesquisa, por favor cite:
+
+```bibtex
+@article{sr3_2021,
+  title={Image Super-Resolution via Iterative Refinement},
+  author={Saharia, Chitwan and Ho, Jonathan and Chan, William and Sumer, Tim and Fleet, David and Norouzi, Mohammad},
+  journal={arXiv preprint arXiv:2104.07636},
+  year={2021}
+}
