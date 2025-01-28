@@ -1,9 +1,9 @@
-version: "3"
-
 services:
   jupyter_lab:
     container_name: difusion_model_jupyter_lab
-    build: .
+    build: 
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8888:8888"
     environment:
@@ -12,3 +12,4 @@ services:
     volumes:
       - .:/app
     working_dir: /app
+    restart: unless-stopped
