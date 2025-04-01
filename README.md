@@ -2,20 +2,6 @@
 
 Este projeto implementa um modelo de super resolução de imagens baseado em difusão, inspirado no artigo [Image Super-Resolution via Iterative Refinement](https://arxiv.org/abs/2104.07636).
 
-## Estrutura do Projeto
-
-``` bash
-src/
-├── data/
-│   └── dataset.py      # Gerenciamento e pré-processamento de dados
-├── models/
-│   ├── diffusion.py    # Processo de difusão
-│   └── unet.py         # Arquitetura U-NET
-├── utils/
-│   └── visualization.py # Funções de visualização
-└── train.py            # Script principal de treinamento
-```
-
 ## Requisitos
 
 - Python 3.8 ou superior
