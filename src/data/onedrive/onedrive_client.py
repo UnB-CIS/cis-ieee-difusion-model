@@ -27,6 +27,7 @@ class OneDriveClient:
         self.scopes = ['User.Read', 'Files.ReadWrite.All']
         self.access_token = None
         self.headers = None
+        self.interactive = True
     
     def authenticate(self, scopes=None, interactive=True):
         """
@@ -35,6 +36,7 @@ class OneDriveClient:
         if scopes:
             self.scopes = scopes
         
+        self.interactive = interactive
 
         if interactive:
             print("\nUsando autenticação interativa (requer interação do usuário)...")
@@ -55,13 +57,15 @@ class OneDriveClient:
                 tenant_id=self.tenant_id,
                 interactive=False
             )
+            print("Nota: O modo não interativo pode requerer licença SPO ou configurações específicas no Azure AD.")
         
-
         self.headers = {
             'Authorization': f'Bearer {self.access_token}'
         }
         
         return self.access_token
+    
+
     
     def list_root_folder(self):
         """
@@ -78,6 +82,11 @@ class OneDriveClient:
             return [item for item in data['value']]
         else:
             print(f'Falha ao listar pasta raiz: {response.status_code}')
+            if response.content:
+                try:
+                    print(response.json())
+                except:
+                    print("Não foi possível decodificar a resposta como JSON")
             return []
     
     def get_folder_children(self, folder_id):
@@ -96,6 +105,11 @@ class OneDriveClient:
             return [item for item in data['value']]
         else:
             print(f'Falha ao listar conteúdo da pasta {folder_id}: {response.status_code}')
+            if response.content:
+                try:
+                    print(response.json())
+                except:
+                    print("Não foi possível decodificar a resposta como JSON")
             return []
     
     def print_folder_children(self, folder_id):
@@ -183,7 +197,11 @@ class OneDriveClient:
         else:
             print(f'Falha ao baixar arquivo com id {file_id}')
             print('Descrição:')
-            print(response.json())
+            if response.content:
+                try:
+                    print(response.json())
+                except:
+                    print("Não foi possível decodificar a resposta como JSON")
             return False
     
     def download_folder_files(self, folder_id, target_dir='onedrive_dataset'):
@@ -212,3 +230,72 @@ class OneDriveClient:
                     success_count += 1
         
         return success_count
+        
+    def download_folder_files_in_batches(self, folder_id, target_dir='onedrive_dataset', batch_size=5, process_func=None):
+        """
+        Baixa arquivos de uma pasta específica em batches, processa e depois remove para economizar espaço.
+        """
+        if not self.headers:
+            self.authenticate()
+            
+        target_path = Path(target_dir)
+        target_path.mkdir(exist_ok=True, parents=True)
+
+        files = self.get_folder_children(folder_id)
+        if not files:
+            print("Nenhum arquivo encontrado na pasta.")
+            return 0
+            
+        # Filtra apenas os arquivos (não pastas)
+        files = [f for f in files if 'file' in f]
+        
+        total_files = len(files)
+        total_processed = 0
+        batch_count = 0
+        
+        print(f"Total de arquivos encontrados: {total_files}")
+        
+        # Processa em batches
+        for i in range(0, total_files, batch_size):
+            batch_count += 1
+            batch = files[i:i+batch_size]
+            
+            print(f"\nProcessando batch {batch_count} ({len(batch)} arquivos)...")
+            
+            downloaded_paths = []
+            for file in batch:
+                file_id = file['id']
+                file_name = file['name']
+                file_size = file.get('size', 'Desconhecido')
+                file_path = target_path / file_name
+                
+                print(f"Baixando {file_name} (Tamanho: {file_size} bytes)...")
+                if self.download_file(file_id, file_path):
+                    downloaded_paths.append(file_path)
+                    print(f"✓ {file_name} baixado com sucesso.")
+                    total_processed += 1
+                else:
+                    print(f"✗ Falha ao baixar {file_name}.")
+            
+            if downloaded_paths:
+                if process_func:
+                    print(f"Processando batch de {len(downloaded_paths)} arquivos...")
+                    try:
+                        process_func(downloaded_paths)
+                        print("Processamento concluído com sucesso.")
+                    except Exception as e:
+                        print(f"Erro durante o processamento do batch: {e}")
+                
+                print("Removendo arquivos")
+                for path in downloaded_paths:
+                    try:
+                        path.unlink()
+                        print(f"✓ Arquivo removido: {path.name}")
+                    except Exception as e:
+                        print(f"✗ Não foi possível remover {path.name}: {e}")
+        
+        print(f"\n=== Resumo ===")
+        print(f"Total de batches processados: {batch_count}")
+        print(f"Total de arquivos processados: {total_processed} de {total_files}")
+        
+        return total_processed

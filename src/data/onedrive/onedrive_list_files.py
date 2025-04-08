@@ -11,7 +11,7 @@ def main():
     client = OneDriveClient()
     
     try:
-        client.authenticate()
+        client.authenticate(interactive=True)  # Usando modo interativo pois o não interativo requer licença SPO
         
         print("\n=== Conteúdo da pasta raiz ===\n")
         root_items = client.list_root_folder()
