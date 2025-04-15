@@ -1,11 +1,11 @@
-# tensorflow>=2.15.0
-# numpy>=1.24.0
-# opencv-python>=4.8.0
-# matplotlib>=3.8.0
-# tqdm>=4.66.0
+tensorflow
+numpy
+opencv-python
+matplotlib
+tqdm
 pytest
-# ruff>=0.1.9
 msal
 httpx
 python-dotenv
 office365-rest-python-client
+ipykernel
