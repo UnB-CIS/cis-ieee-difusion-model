@@ -9,3 +9,4 @@ httpx
 python-dotenv
 office365-rest-python-client
 ipykernel
+google-cloud-storage
