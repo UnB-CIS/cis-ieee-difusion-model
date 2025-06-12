@@ -1,4 +1,12 @@
-pandas
 tensorflow
-tensorflow_datasets
 numpy
+opencv-python
+matplotlib
+tqdm
+pytest
+msal
+httpx
+python-dotenv
+office365-rest-python-client
+ipykernel
+google-cloud-storage

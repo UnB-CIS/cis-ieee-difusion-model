@@ -1,0 +1,9 @@
+=== LOG DE PROCESSAMENTO EM BATCHES ===
+Início: 2025-04-07 17:44:17
+
+2025-04-07 17:44:30: Processados 2 arquivos
+  - 0006.png
+  - 0007.png
+2025-04-07 17:44:39: Processados 2 arquivos
+  - 0009.png
+  - 0011.png

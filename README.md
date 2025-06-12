@@ -1,83 +1,64 @@
-# CIS - IEEE Difusion Model
+# SR3: Super Resolution via Diffusion Model
 
-## Tecnologias Utilizadas
+Este projeto implementa um modelo de super resolução de imagens baseado em difusão, inspirado no artigo [Image Super-Resolution via Iterative Refinement](https://arxiv.org/abs/2104.07636).
 
-- [Docker](hhttps://www.docker.com/)
-- [Tensforflow](https://www.tensorflow.org/)
+## Requisitos
 
-## Pré-Requisitos
+- Python 3.8 ou superior
+- Poetry (gerenciador de dependências)
+- GPU com suporte a CUDA (recomendado)
 
-- Ter o docker instalado
-- Ajustar direção do volume no arquivo `docker-compose.yml` para o diretório onde se encontra o modelo de difusão
+## Instalação
 
-## Estrutura do projeto (draft)
+Você pode escolher entre duas opções de instalação:
 
-```bash
-├── src
-│   └── main-cpu.py # Script principal para execução do modelo de difusão (para o tensor flow rodar em CPU)
-├── docs
-│   ├── bib.md # Referências bibliográficas
-│   └── main-cpu.md  # Documentação do script main-cpu.py
-```
+### Opção 1: Usando Poetry (Recomendado)
 
-## Como rodar o projeto
+1. Instale o Poetry (se ainda não tiver):
 
 ```bash
-docker-compose up
+curl -sSL https://install.python-poetry.org | python3 -
 ```
 
-## Branchs principais
+2.Clone o repositório:
 
-### Dev
+```bash
+git clone https://github.com/seu-usuario/cis-ieee-difusion-model.git
+cd cis-ieee-difusion-model
+```
 
-Branch de ambiente de desenvolvimento da equipe.
+3.Instale as dependências:
 
-Toda nova funcionalidade ou correção deve primeiro ser implementada na branch `dev`.
+```bash
+poetry install
+```
 
-### Main
+4.Ative o ambiente virtual:
 
-Branch principal do repositório e representa o ambiente de produção do projeto.
+```bash
+poetry shell
+```
 
-## Boas Práticas de GitHub
+### Opção 2: Usando pip
 
-### Novas branchs
+1. Clone o repositório:
 
-Procure criar branchs a partir da versão dev, caso vá desenvolver alguma alteração visual ou funcional do software.
+```bash
+git clone https://github.com/seu-usuario/cis-ieee-difusion-model.git
+cd cis-ieee-difusion-model
+```
 
-### Nomenclatura de novas branchs
+2.Crie e ative um ambiente virtual (opcional, mas recomendado):
 
-Ao criar a nova branch, procure trazer significado a ela desde a sua nomeação, e aqui seguem algumas boas práticas:
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# ou
+.\venv\Scripts\activate  # Windows
+```
 
-#### Prefixo
+3.Instale as dependências:
 
-Coloque um prefixo na branch, a fim de esclarecer sua intenção. Alguns exemplos abaixo:
-
-- `feat/`: implementação de uma nova funcionalidade do software;
-- `fix/`: implementação de uma correção no software;
-- `docs/`: documentação de parte ou trecho do software;
-- `refactor/`: refatoração de parte ou trecho do software.
-
-#### Nome
-
-Após o prefixo, coloque um nome declarativo ou explicativo do objetivo da branch, ou seja, um nome que diga
-o que será implementado na branch. Procure escrever na convenção "kebab-case".
-
-#### Sufixo
-
-Após o nome, adicione um sufixo numérico, explicitando qual a issue do projeto a que se refere a nova branch.
-
-#### Exemplo
-
-- `feat/data-fetching-23`
-- `fix/tensorflow-implementation-12`
-- `refactor/extract-component-5`
-
-### Novas issues no Project
-
-É necessário tomar algumas atenções quanto às issues do GitHub.
-
-#### Integração Contínua
-
-Focando-se na boa prática de integração contínua, faz-se necessário particionar pendências e novas funcionalidades
-o máximo possível, enquanto houver sentido, afim de se criar issues com menores responsabilidades, promovendo
-branchs menores, PRs menores, merges mais frequentes e um código-fonte com atualizações constantes.
+```bash
+pip install -r requirements.txt
+```
